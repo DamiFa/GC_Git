@@ -99,7 +99,7 @@ public class SC_Player : MonoBehaviour {
 
 	private void TiltMovement ()
 	{
-		_Tilt = _TiltStrenght.Evaluate(Mathf.Abs(Input.acceleration.x)) * Mathf.Sign(Input.acceleration.x) * _TiltSpeed;
+        _Tilt = _TiltStrenght.Evaluate(Mathf.Abs(Input.acceleration.x)) * Mathf.Sign(Input.acceleration.x) * _TiltSpeed;
 	}
 
 	private void FallingMovement ()

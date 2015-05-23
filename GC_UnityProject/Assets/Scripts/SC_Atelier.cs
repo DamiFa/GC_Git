@@ -7,7 +7,7 @@ public class SC_Atelier : MonoBehaviour {
 	public List<GameObject> a_Destructibles;
 	public float f_Length;
 
-	// Use this for initialization
+    // Use this for initialization
 	void Start () 
 	{
 		a_Destructibles = new List<GameObject>();

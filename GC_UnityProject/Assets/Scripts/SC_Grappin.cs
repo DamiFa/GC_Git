@@ -59,7 +59,18 @@ public class SC_Grappin : MonoBehaviour {
 			}
 		}
 
-		if(i_NbTouches == 0 && i_PreviousNbTouches > 0)
+        if (Input.GetMouseButtonDown(0))
+        {
+            _V2_fPos = Input.mousePosition;
+            _V3_fingerPos = _Cam.ScreenToWorldPoint(new Vector3(_V2_fPos.x, _V2_fPos.y, 10));
+
+            if (i_GrappinState != 1)
+            {
+                StartCoroutine(LancerGrappin(_V3_fingerPos));
+            }
+        }
+
+		if(i_NbTouches == 0 && i_PreviousNbTouches > 0 || Input.GetMouseButtonUp(0))
 		{
 			StartCoroutine("RamenerGrappin");
 		}
@@ -158,6 +169,7 @@ public class SC_Grappin : MonoBehaviour {
 		{
 			StartCoroutine(RamenerGrappin());
 		}
+
 		yield break;
 	}
 

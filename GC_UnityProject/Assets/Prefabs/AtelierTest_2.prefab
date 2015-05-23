@@ -10,6 +10,7 @@ GameObject:
   - 4: {fileID: 400000}
   - 114: {fileID: 11400002}
   - 114: {fileID: 11400004}
+  - 61: {fileID: 6196394}
   m_Layer: 0
   m_Name: Poisson_1_Root
   m_TagString: Destructible
@@ -63,6 +64,7 @@ GameObject:
   - 4: {fileID: 400006}
   - 114: {fileID: 11400008}
   - 114: {fileID: 11400006}
+  - 61: {fileID: 6128204}
   m_Layer: 0
   m_Name: Poisson_1_Root
   m_TagString: Destructible
@@ -80,6 +82,7 @@ GameObject:
   - 4: {fileID: 400008}
   - 114: {fileID: 11400010}
   - 114: {fileID: 11400012}
+  - 61: {fileID: 6109778}
   m_Layer: 0
   m_Name: Poisson_1_Root
   m_TagString: Destructible
@@ -149,6 +152,7 @@ GameObject:
   - 4: {fileID: 400016}
   - 114: {fileID: 11400016}
   - 114: {fileID: 11400014}
+  - 61: {fileID: 6119738}
   m_Layer: 0
   m_Name: Poisson_1_Root
   m_TagString: Destructible
@@ -396,6 +400,58 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100014}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!61 &6109778
+BoxCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100008}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Size: {x: 3, y: 3}
+--- !u!61 &6119738
+BoxCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100016}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Size: {x: 3, y: 3}
+--- !u!61 &6128204
+BoxCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100006}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Size: {x: 3, y: 3}
+--- !u!61 &6196394
+BoxCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Size: {x: 3, y: 3}
 --- !u!64 &6400000
 MeshCollider:
   m_ObjectHideFlags: 1
