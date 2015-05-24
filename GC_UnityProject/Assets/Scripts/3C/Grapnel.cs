@@ -108,7 +108,8 @@ public class Grapnel : MonoBehaviour, IPersistent
         if (Vector3.Distance(_myTransform.position, _targetPosition) > 0.1f)
 		{
             Vector3 startPosition = _myTransform.TransformPoint(_initialPosition);
-            _myTransform.position = Vector3.Lerp(startPosition, _targetPosition, _launchStrength.Evaluate(_duration));
+            AnimationCurve strenght = _state == States.FIRED ? _launchStrength : _rewindStrength;
+            _myTransform.position = Vector3.Lerp(startPosition, _targetPosition, strenght.Evaluate(_duration));
             _duration += _realSpeed * Time.deltaTime;
 		}
         else
