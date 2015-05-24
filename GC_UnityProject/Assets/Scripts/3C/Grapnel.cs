@@ -169,7 +169,7 @@ public class Grapnel : MonoBehaviour, IPersistent
 
             _duration = 0.0f;
             float distance = Vector3.Distance(_myTransform.position, _playerTransform.TransformPoint(_initialPosition));
-            _realSpeed = (_launchSpeed + Mathf.Abs(_player.fallMovement)) / distance;
+            _realSpeed = (_rewindSpeed + Mathf.Abs(_player.fallMovement)) / distance;
 
             _player.externalForce = Vector2.zero;
             _myTransform.SetParent(_playerTransform);
