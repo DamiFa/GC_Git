@@ -1,9 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ApplicationManager : MonoBehaviour {
+public class ApplicationManager : MonoBehaviour
+{
+
+    // Properties
 
     public static ApplicationManager singleton { get; private set; }
+
+    public bool isPaused { get; private set; }
 
     void Awake()
     {
@@ -17,6 +22,8 @@ public class ApplicationManager : MonoBehaviour {
             enabled = false;
             return;
         }
+
+        isPaused = false;
     }
 
 	void Start()
@@ -26,15 +33,36 @@ public class ApplicationManager : MonoBehaviour {
 	
 	void Update()
     {
-	
+	    if (Input.GetKeyDown(KeyCode.R))
+        {
+            ReloadLevel();
+        }
 	}
 
     void OnGUI()
     {
         if (GUILayout.Button("Reload"))
         {
-            Application.LoadLevel(0); // TEMP
+            //Application.LoadLevel(0); // TEMP
+            ReloadLevel();
         }
+    }
+
+    public void Pause()
+    {
+        isPaused = true;
+        Time.timeScale = 0.0f;
+    }
+
+    public void Resume()
+    {
+        isPaused = false;
+        Time.timeScale = 1.0f;
+    }
+
+    public void ReloadLevel()
+    {
+        GameManager.singleton.Reload();
     }
 
 }

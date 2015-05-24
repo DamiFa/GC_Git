@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class Obstacle : MonoBehaviour, IPoolable
+public abstract class Obstacle : MonoBehaviour, IPersistent
 {
 
     // Constants
@@ -12,6 +12,8 @@ public abstract class Obstacle : MonoBehaviour, IPoolable
 
     [SerializeField]
     protected int _points;
+
+    // Virtual methods
 
     public virtual void Initialize()
     {

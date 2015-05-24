@@ -1,5 +1,5 @@
 ﻿
-internal interface IPoolable
+internal interface IPersistent
 {
     void Initialize();
     void Clear();

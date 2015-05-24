@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Character : MonoBehaviour
+public class Character : MonoBehaviour, IPersistent
 {
 
     // Constants
@@ -10,7 +10,6 @@ public class Character : MonoBehaviour
 
     // Properties
 
-    public static Character player { get; private set; }
     public bool isDead
     {
         get
@@ -43,8 +42,6 @@ public class Character : MonoBehaviour
     private float _tiltSpeed;
     [SerializeField]
     private float _horizontalClamp;
-    [SerializeField]
-    private bool _isPlayer;
 #if UNITY_EDITOR
     [SerializeField]
     private bool _isInvinsible;
@@ -57,33 +54,31 @@ public class Character : MonoBehaviour
     private float _velocityY;
     private float _fallMovement;
     private float _tiltMovement;
+    private Vector3 _initialPosition;
 
     private Transform _myTransform;
     private Rigidbody2D _myRigidbody;
     private GameManager _gameManager;
+    private ApplicationManager _application;
 
     // Messages
 
     void Awake()
     {
-        isDead = false;
-        _fallMovement = 1.0f;
-
         _myTransform = transform;
         _myRigidbody = GetComponent<Rigidbody2D>();
-
-        if (_isPlayer)
-            player = this;
+        _initialPosition = _myTransform.position;
     }
 
 	void Start()
     {
         _gameManager = GameManager.singleton;
+        _application = ApplicationManager.singleton;
 	}
 	
 	void Update()
     {
-        if (_isDead)
+        if (_isDead || _application.isPaused)
             return;
 
         Fall();
@@ -111,6 +106,19 @@ public class Character : MonoBehaviour
 #endif
             isDead = true;
         }
+    }
+
+    // Virtual/contract methods
+
+    public void Initialize()
+    {
+        isDead = false;
+        _fallMovement = 1.0f;
+    }
+
+    public void Clear()
+    {
+        _myTransform.position = _initialPosition;
     }
 
     // Private methods

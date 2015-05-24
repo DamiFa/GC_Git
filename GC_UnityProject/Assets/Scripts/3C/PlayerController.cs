@@ -23,10 +23,6 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         _character = GetComponent<Character>();
-    }
-
-    void Start()
-    {
         _cameraDistance = Mathf.Abs(_camera.transform.position.z);
     }
 

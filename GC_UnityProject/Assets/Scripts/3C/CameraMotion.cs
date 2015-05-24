@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CameraMotion : MonoBehaviour {
+public class CameraMotion : MonoBehaviour, IPersistent
+{
 
     // Inspector variables
 
@@ -17,15 +18,23 @@ public class CameraMotion : MonoBehaviour {
     void Awake()
     {
         _myTransform = transform;
+        _offsetY = _myTransform.position.y - _player.position.y;
     }
-
-	void Start()
-    {
-	    _offsetY = _myTransform.position.y - _player.position.y;
-	}
 	
 	void Update()
     {
         _myTransform.position = new Vector3(_myTransform.position.x, _player.position.y + _offsetY, _myTransform.position.z);
 	}
+
+    // Virtual/contract methods
+
+    public void Initialize()
+    {
+        
+    }
+
+    public void Clear()
+    {
+        _myTransform.position = new Vector3(_myTransform.position.x, _player.position.y + _offsetY, _myTransform.position.z);
+    }
 }

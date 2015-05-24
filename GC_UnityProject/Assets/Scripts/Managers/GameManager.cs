@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GameManager : MonoBehaviour {
+public class GameManager : MonoBehaviour
+{
 
     // Properties
 
@@ -12,6 +13,8 @@ public class GameManager : MonoBehaviour {
     // Private members
 
     private float _startTime;
+
+    private Character _player;
 
     void Awake()
     {
@@ -24,6 +27,9 @@ public class GameManager : MonoBehaviour {
             enabled = false;
             return;
         }
+
+        _player = GameObject.FindGameObjectWithTag("Player").GetComponent<Character>();
+        _player.HasDied += this.EndGame;
     }
 
     void Start()
@@ -36,9 +42,31 @@ public class GameManager : MonoBehaviour {
         currentTime = Time.time - _startTime;
 	}
 
-    void StartGame()
+    // Private methods
+
+    private void StartGame()
     {
+        _player.Initialize();
+        _player.GetComponentInChildren<Grapnel>().Initialize();
         AtelierManager.singleton.Initialize();
         _startTime = Time.time;
+        ApplicationManager.singleton.Resume();
     }
+
+    private void EndGame()
+    {
+        ApplicationManager.singleton.Pause();
+    }
+
+    // Public methods
+
+    public void Reload()
+    {
+        AtelierManager.singleton.Clear();
+        _player.Clear();
+        _player.GetComponentInChildren<Grapnel>().Clear();
+        Camera.main.GetComponent<CameraMotion>().Clear();
+        StartGame();
+    }
+
 }

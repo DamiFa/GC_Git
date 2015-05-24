@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 #endif
 
-public class AtelierManager : MonoBehaviour, IPoolable {
+public class AtelierManager : MonoBehaviour, IPersistent
+{
 
     public static AtelierManager singleton { get; private set; }
 
@@ -24,11 +25,12 @@ public class AtelierManager : MonoBehaviour, IPoolable {
     private float _endHeight;
 
     private List<Atelier> _pooledAteliers;
-    private Queue<Atelier> _deployedAteliers;
 #if UNITY_WINRT == false
     private RNGCryptoServiceProvider _rng;
     private byte[] _randomNumbers;
 #endif
+
+    // Messages
 
     void Awake()
     {
@@ -45,7 +47,6 @@ public class AtelierManager : MonoBehaviour, IPoolable {
         _atelierCount = _firstAtelier != null ? _ateliers.Length + 1 : _ateliers.Length;
         _pooledAteliers = new List<Atelier>();
         _pooledAteliers.Capacity = _atelierCount;
-        _deployedAteliers = new Queue<Atelier>();
 
 #if UNITY_WINRT == false
         _rng = new RNGCryptoServiceProvider();
@@ -64,10 +65,7 @@ public class AtelierManager : MonoBehaviour, IPoolable {
         }
     }
 
-    void Update()
-    {
-
-    }
+    // Virtual/contract methods
 
     public void Initialize()
     {
@@ -77,7 +75,6 @@ public class AtelierManager : MonoBehaviour, IPoolable {
         {
             _firstAtelier.Initialize();
             _endHeight = _offset - _firstAtelier.length;
-            _deployedAteliers.Enqueue(_firstAtelier);
             Append();
         }
         else
@@ -91,10 +88,19 @@ public class AtelierManager : MonoBehaviour, IPoolable {
     public void Clear()
     {
         _pooledAteliers.Clear();
-        for (int i = 0; i < _deployedAteliers.Count; ++i)
+        if (_firstAtelier != null && _firstAtelier.isDeployed)
         {
-            Atelier atelier = _deployedAteliers.Dequeue();
-            atelier.Clear();
+            _firstAtelier.Clear();
+            _firstAtelier.transform.position = new Vector3(0.0f, _offset - _firstAtelier.length * 0.5f, 0.0f);
+        }
+
+        for (int i = 0; i < _ateliers.Length; ++i)
+        {
+            if (_ateliers[i].isDeployed)
+            {
+                _ateliers[i].Clear();
+            }
+            _ateliers[i].transform.position = new Vector3(100.0f, 0.0f, 0.0f);
         }
     }
 
@@ -114,14 +120,12 @@ public class AtelierManager : MonoBehaviour, IPoolable {
         newAtelier.Initialize();
         _endHeight -= newAtelier.length;
         _pooledAteliers.RemoveAt(trueNumber);
-        _deployedAteliers.Enqueue(newAtelier);
     }
     
     private void Pool(Atelier atelier)
     {
         atelier.Clear();
         _pooledAteliers.Add(atelier);
-        _deployedAteliers.Dequeue();
     }
 
 }

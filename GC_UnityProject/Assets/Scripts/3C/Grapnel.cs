@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Grapnel : MonoBehaviour {
+public class Grapnel : MonoBehaviour, IPersistent
+{
 
     // States
 
@@ -33,6 +34,7 @@ public class Grapnel : MonoBehaviour {
     private Transform _playerTransform;
     private Character _player;
     private Obstacle _currentlyHookedObject;
+    private ApplicationManager _application;
 
     // Messages
 
@@ -41,17 +43,19 @@ public class Grapnel : MonoBehaviour {
         _myTransform = transform;
         _playerTransform = _myTransform.parent;
         _player = GetComponentInParent<Character>();
+        _initialPosition = _myTransform.localPosition;
     }
 
-	void Start()
+    void Start()
     {
-        _state = States.IDLE;
-        _initialPosition = _myTransform.localPosition;
-        _currentAngle = 0.0f;
-	}
+        _application = ApplicationManager.singleton;
+    }
 	
 	void Update()
     {
+        if (_application.isPaused)
+            return;
+
         switch (_state)
         {
             case States.IDLE:
@@ -80,6 +84,21 @@ public class Grapnel : MonoBehaviour {
             _myTransform.SetParent(other.transform);
             _currentlyHookedObject = other.GetComponent<Obstacle>();
         }
+    }
+
+    // Virtual/contract methods
+
+    public void Initialize()
+    {
+        _state = States.IDLE;
+        _currentAngle = 0.0f;
+    }
+
+    public void Clear()
+    {
+        _myTransform.SetParent(_playerTransform);
+        _myTransform.localPosition = _initialPosition;
+        _myTransform.rotation = Quaternion.identity;
     }
 
     // Private methods

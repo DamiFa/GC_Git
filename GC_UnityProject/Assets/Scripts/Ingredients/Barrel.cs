@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Barrel : Obstacle {
+public class Barrel : Obstacle
+{
 
 	// Use this for initialization
 	void Start () {

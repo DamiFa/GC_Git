@@ -2,12 +2,13 @@
 using System.Collections;
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class Atelier : MonoBehaviour, IPoolable
+public class Atelier : MonoBehaviour, IPersistent
 {
 
     // Properties
 
     public float length { get; private set; }
+    public bool isDeployed { get; private set; }
     
     // Events
 
@@ -29,23 +30,26 @@ public class Atelier : MonoBehaviour, IPoolable
     {
         Bounds bounds = GetComponent<Collider2D>().bounds;
         length = bounds.max.y - bounds.min.y;
+        isDeployed = false;
     }
-
-	void Start()
-    {
-	    
-	}
-	
-	void Update()
-    {
-	    
-	}
 
     void OnTriggerEnter2D()
     {
         if (OnPlayerEntered != null)
+        {
             OnPlayerEntered(this);
+        }
     }
+
+    void OnDestroy()
+    {
+        if (isDeployed)
+        {
+            Clear();
+        }
+    }
+
+    // Virtual/contract methods
 
     public void Initialize()
     {
@@ -57,12 +61,14 @@ public class Atelier : MonoBehaviour, IPoolable
 
         _countDownB4Pooling = 2;
         OnPlayerEntered += this.CheckIfPoolable;
+        isDeployed = true;
     }
 
     public void Clear()
     {
         OnPlayerEntered -= this.CheckIfPoolable;
         gameObject.SetActive(false);
+        isDeployed = false;
     }
 
     // Private methods
