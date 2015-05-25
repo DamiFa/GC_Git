@@ -20,6 +20,8 @@ public class Grapnel : MonoBehaviour, IPersistent
     private float _rewindSpeed;
     [SerializeField]
     private float _weight;
+    [SerializeField]
+    private LayerMask _layerMask;
 
     // Private members
 
@@ -29,12 +31,15 @@ public class Grapnel : MonoBehaviour, IPersistent
     private float _currentAngle;
     private float _realSpeed;
     private float _duration;
+    private Vector2 _boxCastSize;
+    private Vector2 _previousPosition;
 
     private Transform _myTransform;
     private Transform _playerTransform;
     private Character _player;
     private Obstacle _currentlyHookedObject;
     private ApplicationManager _application;
+    
 
     // Messages
 
@@ -45,6 +50,10 @@ public class Grapnel : MonoBehaviour, IPersistent
         _player = GetComponentInParent<Character>();
         _initialPosition = _myTransform.localPosition;
         _currentlyHookedObject = null;
+
+        Collider2D myCollider = GetComponent<Collider2D>();
+        _boxCastSize = new Vector2(myCollider.bounds.max.x - myCollider.bounds.min.x, myCollider.bounds.max.y - myCollider.bounds.min.y);
+        _previousPosition = _myTransform.position;
     }
 
     void Start()
@@ -77,16 +86,38 @@ public class Grapnel : MonoBehaviour, IPersistent
         }
 	}
 
+    void FixedUpdate()
+    {
+        if (_state == States.FIRED)
+        {
+            Vector2 direction = (Vector2)_myTransform.position - _previousPosition;
+            RaycastHit2D[] hit = Physics2D.BoxCastAll(_previousPosition, _boxCastSize, _currentAngle * Mathf.Rad2Deg + 180.0f, direction, direction.magnitude, _layerMask);
+            if (hit.Length == 0)
+                return;
+
+            int closestObject = 0;
+            float closestDistance = Mathf.Infinity;
+            for (int i = 0; i < hit.Length; ++i)
+            {
+                float distance = Vector2.Distance(_previousPosition, hit[i].transform.position);
+                if (distance <= closestDistance)
+                {
+                    closestDistance = distance;
+                    closestObject = i;
+                }
+            }
+            Hook(hit[closestObject].collider.gameObject);
+        }
+
+        _previousPosition = _myTransform.position;
+    }
+
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (_state != States.FIRED)
-            return;
-
-        _state = States.HOOKED;
-        _currentlyHookedObject = other.GetComponent<Obstacle>();
-        _targetPosition = _currentlyHookedObject.transform.position;
-        _myTransform.position = _targetPosition;
-        _myTransform.SetParent(other.transform);
+        if (_state == States.FIRED)
+        {
+            //Hook(other.gameObject);
+        }
     }
 
     // Virtual/contract methods
@@ -142,6 +173,15 @@ public class Grapnel : MonoBehaviour, IPersistent
             _playerTransform.position.y - _myTransform.position.y);
 
         _player.externalForce = direction * _weight * 0.05f;
+    }
+
+    private void Hook(GameObject obstacle)
+    {
+        _state = States.HOOKED;
+        _currentlyHookedObject = obstacle.GetComponent<Obstacle>();
+        _targetPosition = _currentlyHookedObject.transform.position;
+        _myTransform.position = _targetPosition;
+        _myTransform.SetParent(obstacle.transform);
     }
 
     // Public methods

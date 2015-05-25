@@ -83613,6 +83613,9 @@ MonoBehaviour:
   _launchSpeed: 20
   _rewindSpeed: 10
   _weight: 20
+  _layerMask:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!61 &1365161988
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -83640,7 +83643,7 @@ Rigidbody2D:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 1
+  m_CollisionDetection: 0
 --- !u!1 &1366553178
 GameObject:
   m_ObjectHideFlags: 0
@@ -119935,7 +119938,7 @@ MonoBehaviour:
     m_PostInfinity: 2
   _tiltSpeed: 8
   _horizontalClamp: 4.30000019
-  _isInvinsible: 0
+  _isInvinsible: 1
 --- !u!61 &1797182078
 BoxCollider2D:
   m_ObjectHideFlags: 0
