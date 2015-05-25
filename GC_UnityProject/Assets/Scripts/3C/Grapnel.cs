@@ -44,6 +44,7 @@ public class Grapnel : MonoBehaviour, IPersistent
         _playerTransform = _myTransform.parent;
         _player = GetComponentInParent<Character>();
         _initialPosition = _myTransform.localPosition;
+        _currentlyHookedObject = null;
     }
 
     void Start()
@@ -78,12 +79,14 @@ public class Grapnel : MonoBehaviour, IPersistent
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (_state == States.FIRED)
-        {
-            _state = States.HOOKED;
-            _myTransform.SetParent(other.transform);
-            _currentlyHookedObject = other.GetComponent<Obstacle>();
-        }
+        if (_state != States.FIRED)
+            return;
+
+        _state = States.HOOKED;
+        _currentlyHookedObject = other.GetComponent<Obstacle>();
+        _targetPosition = _currentlyHookedObject.transform.position;
+        _myTransform.position = _targetPosition;
+        _myTransform.SetParent(other.transform);
     }
 
     // Virtual/contract methods
@@ -99,6 +102,7 @@ public class Grapnel : MonoBehaviour, IPersistent
         _myTransform.SetParent(_playerTransform);
         _myTransform.localPosition = _initialPosition;
         _myTransform.rotation = Quaternion.identity;
+        _currentlyHookedObject = null;
     }
 
     // Private methods
@@ -108,8 +112,7 @@ public class Grapnel : MonoBehaviour, IPersistent
         if (Vector3.Distance(_myTransform.position, _targetPosition) > 0.1f)
 		{
             Vector3 startPosition = _myTransform.TransformPoint(_initialPosition);
-            AnimationCurve strenght = _state == States.FIRED ? _launchStrength : _rewindStrength;
-            _myTransform.position = Vector3.Lerp(startPosition, _targetPosition, strenght.Evaluate(_duration));
+            _myTransform.position = Vector3.Lerp(startPosition, _targetPosition, _launchStrength.Evaluate(_duration));
             _duration += _realSpeed * Time.deltaTime;
 		}
         else
@@ -122,7 +125,7 @@ public class Grapnel : MonoBehaviour, IPersistent
     {
         if (Vector3.Distance(_myTransform.localPosition, _initialPosition) > 0.1f)
         {
-            _myTransform.localPosition = Vector3.Lerp(_targetPosition, _initialPosition, _launchStrength.Evaluate(_duration));
+            _myTransform.localPosition = Vector3.Lerp(_targetPosition, _initialPosition, _rewindStrength.Evaluate(_duration));
             _duration += _realSpeed * Time.deltaTime;
         }
         else
@@ -173,7 +176,12 @@ public class Grapnel : MonoBehaviour, IPersistent
 
             _player.externalForce = Vector2.zero;
             _myTransform.SetParent(_playerTransform);
-            _currentlyHookedObject.Clear();
+
+            if (_currentlyHookedObject != null)
+            {
+                _currentlyHookedObject.Clear();
+                _currentlyHookedObject = null;
+            }
         }
     }
 

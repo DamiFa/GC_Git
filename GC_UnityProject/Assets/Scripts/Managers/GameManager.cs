@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     private float _startTime;
 
     private Character _player;
+    private Grapnel _grapnel;
 
     void Awake()
     {
@@ -29,6 +30,7 @@ public class GameManager : MonoBehaviour
         }
 
         _player = GameObject.FindGameObjectWithTag("Player").GetComponent<Character>();
+        _grapnel = _player.GetComponentInChildren<Grapnel>();
         _player.HasDied += this.EndGame;
     }
 
@@ -47,7 +49,7 @@ public class GameManager : MonoBehaviour
     private void StartGame()
     {
         _player.Initialize();
-        _player.GetComponentInChildren<Grapnel>().Initialize();
+        _grapnel.Initialize();
         AtelierManager.singleton.Initialize();
         _startTime = Time.time;
         ApplicationManager.singleton.Resume();
@@ -64,7 +66,7 @@ public class GameManager : MonoBehaviour
     {
         AtelierManager.singleton.Clear();
         _player.Clear();
-        _player.GetComponentInChildren<Grapnel>().Clear();
+        _grapnel.Clear();
         Camera.main.GetComponent<CameraMotion>().Clear();
         StartGame();
     }

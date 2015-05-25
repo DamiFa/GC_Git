@@ -39,15 +39,6 @@ public class ApplicationManager : MonoBehaviour
         }
 	}
 
-    void OnGUI()
-    {
-        if (GUILayout.Button("Reload"))
-        {
-            //Application.LoadLevel(0); // TEMP
-            ReloadLevel();
-        }
-    }
-
     public void Pause()
     {
         isPaused = true;

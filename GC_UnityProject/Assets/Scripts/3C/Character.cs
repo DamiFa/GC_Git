@@ -119,6 +119,7 @@ public class Character : MonoBehaviour, IPersistent
     public void Clear()
     {
         _myTransform.position = _initialPosition;
+        externalForce = Vector2.zero;
     }
 
     // Private methods
