@@ -47,3 +47,18 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Arms
+    uniqueID: 3793427337
+    locked: 0
+  - name: Legs
+    uniqueID: 1707775373
+    locked: 0
+  - name: Bag
+    uniqueID: 3195298113
+    locked: 0
+  - name: Rockets
+    uniqueID: 780767951
+    locked: 0
+  - name: Enemies
+    uniqueID: 814087631
+    locked: 0
