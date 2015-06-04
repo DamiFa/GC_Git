@@ -8,6 +8,14 @@ public class Grapnel : MonoBehaviour, IPersistent
 
     private enum States { IDLE, FIRED, HOOKED, REWINDING, HIT_NOTHING }
 
+    // Events
+
+    public event System.Action OnHooked;
+    public event System.Action OnDetached;
+    public event System.Action OnLaunched;
+    public event System.Action OnRewinding;
+    public event System.Action OnFinishedRewinding;
+
     // Inspector variables
 
     [SerializeField]
@@ -164,6 +172,8 @@ public class Grapnel : MonoBehaviour, IPersistent
             _state = States.IDLE;
             _myTransform.localPosition = _initialPosition;
             _myTransform.rotation = Quaternion.identity;
+
+            if (OnFinishedRewinding != null) OnFinishedRewinding();
         }
     }
 
@@ -182,6 +192,8 @@ public class Grapnel : MonoBehaviour, IPersistent
         _targetPosition = _currentlyHookedObject.transform.position;
         _myTransform.position = _targetPosition;
         _myTransform.SetParent(obstacle.transform);
+
+        if (OnHooked != null) OnHooked();
     }
 
     // Public methods
@@ -200,6 +212,8 @@ public class Grapnel : MonoBehaviour, IPersistent
             _duration = 0.0f;
             float distance = Vector3.Distance(_myTransform.position, targetPosition);
             _realSpeed = (_launchSpeed + Mathf.Abs(_player.fallMovement)) / distance;
+
+            if (OnLaunched != null) OnLaunched();
         }
     }
 
@@ -207,6 +221,9 @@ public class Grapnel : MonoBehaviour, IPersistent
     {
         if (_state == States.FIRED || _state == States.HOOKED)
         {
+            if (_state == States.HOOKED && OnDetached != null)
+                OnDetached();
+
             _state = States.REWINDING;
             _targetPosition = _playerTransform.InverseTransformPoint(_myTransform.position);
 
@@ -222,6 +239,8 @@ public class Grapnel : MonoBehaviour, IPersistent
                 _currentlyHookedObject.Clear();
                 _currentlyHookedObject = null;
             }
+
+            if (OnRewinding != null) OnRewinding();
         }
     }
 

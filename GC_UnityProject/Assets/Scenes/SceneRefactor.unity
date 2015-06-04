@@ -5994,7 +5994,7 @@ Animator:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 82796162}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: d0e25d98ab08dea43b8179e1fb2d5084, type: 2}
   m_CullingMode: 0
@@ -16471,6 +16471,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 242967597}
+  - 114: {fileID: 242967598}
   m_Layer: 8
   m_Name: Player Graphics
   m_TagString: Untagged
@@ -16493,6 +16494,23 @@ Transform:
   - {fileID: 932496164}
   m_Father: {fileID: 1797182076}
   m_RootOrder: 1
+--- !u!114 &242967598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 242967596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26906d7b8621afb4fa6935b19c849ebd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _body: {fileID: 932496165}
+  _grapnel: {fileID: 1365161990}
+  _rocketRight: {fileID: 2003353335}
+  _rocketLeft: {fileID: 82796165}
+  _rocketRotationSpeed: 3
+  _rocketMaxAngle: 80
 --- !u!1 &244116459
 GameObject:
   m_ObjectHideFlags: 0
@@ -137468,7 +137486,7 @@ Animator:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2003353334}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: aa21358574156fc4e8b387ef4e4eff07, type: 2}
   m_CullingMode: 0

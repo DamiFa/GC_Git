@@ -25,6 +25,7 @@ public class Character : MonoBehaviour, IPersistent
     }
     public float fallMovement { get { return _fallMovement; } }
     public Vector2 externalForce { get; set; }
+    public float tilt { get { return _tiltMovement; } }
 
     // Events
 
