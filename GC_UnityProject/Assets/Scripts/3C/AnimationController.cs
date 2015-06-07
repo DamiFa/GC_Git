@@ -33,17 +33,12 @@ public class AnimationController : MonoBehaviour, IPersistent
         Initialize();
 
         Grapnel grapnel = _grapnel.GetComponent<Grapnel>();
-        grapnel.OnHooked            += CharacterHookAnimation;
-        grapnel.OnDetached          += CharacterIdleAnimation;
-        grapnel.OnLaunched          += GrapnelLaunchAnimation;
-        grapnel.OnRewinding         += GrapnelRewindAnimation;
-        grapnel.OnHooked            += GrapnelHookAnimation;
-        grapnel.OnFinishedRewinding += GrapnelIdleAnimation;
+        grapnel.OnStateChanged += ChangeAnimationState;
 	}
 	
 	void LateUpdate()
     {
-        float tilt = _character.tilt * Time.deltaTime * _rocketRotationSpeed;
+        float tilt = _character.tiltMovement * Time.deltaTime * _rocketRotationSpeed;
         float leftRocketAngle = Mathf.Lerp(0.0f, _rocketMaxAngle, tilt);
         float rightRocketAngle = Mathf.Lerp(0.0f, -1.0f * _rocketMaxAngle, -1.0f * tilt);
 
@@ -67,6 +62,34 @@ public class AnimationController : MonoBehaviour, IPersistent
     }
 
     // Private methods
+
+    private void ChangeAnimationState(Grapnel.States newState)
+    {
+        switch (newState)
+        {
+            case Grapnel.States.IDLE:
+                _body.SetBool("IsHooked", false);
+                _grapnel.SetBool("IsRewinding", false);
+                break;
+            case Grapnel.States.FIRED:
+                _grapnel.SetBool("IsLaunched", true);
+                break;
+            case Grapnel.States.HOOKED:
+                _body.SetBool("IsHooked", true);
+                _grapnel.SetBool("IsHooked", true);
+                _grapnel.SetBool("IsLaunched", false);
+                break;
+            case Grapnel.States.REWINDING:
+                _grapnel.SetBool("IsRewinding", true);
+                _grapnel.SetBool("IsLaunched", false);
+                _grapnel.SetBool("IsHooked", false);
+                break;
+            case Grapnel.States.HIT_NOTHING:
+                break;
+            default:
+                break;
+        }
+    }
 
     private void CharacterHookAnimation()
     {

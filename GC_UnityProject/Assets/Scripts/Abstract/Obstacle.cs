@@ -8,10 +8,20 @@ public abstract class Obstacle : MonoBehaviour, IPersistent
 
     public const int LAYER = 9;
 
+    // Events
+
+    public static event System.Action<int> OnDestroyed;
+
+     // Properties
+
+    public int hookedPoints { get { return _hookedPoints; } }
+
     // Inspector variables
 
     [SerializeField]
-    protected int _points;
+    protected int _hookedPoints;
+    [SerializeField]
+    protected int _destructionPoints;
 
     // Virtual methods
 
@@ -23,6 +33,8 @@ public abstract class Obstacle : MonoBehaviour, IPersistent
     public virtual void Clear()
     {
         gameObject.SetActive(false);
+
+        if (OnDestroyed != null) OnDestroyed(_destructionPoints);
     }
 
 }

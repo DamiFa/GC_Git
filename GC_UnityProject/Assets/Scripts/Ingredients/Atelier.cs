@@ -9,6 +9,17 @@ public class Atelier : MonoBehaviour, IPersistent
 
     public float length { get; private set; }
     public bool isDeployed { get; private set; }
+    public Obstacle[] ingredients
+    {
+        get { return _ingredients; }
+        set
+        {
+            if (Application.isPlaying)
+                Debug.LogWarning("You tried to change the ingredients list during play.", this);
+            else
+                _ingredients = value;
+        }
+    }
     
     // Events
 

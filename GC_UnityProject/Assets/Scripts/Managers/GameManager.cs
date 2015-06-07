@@ -9,10 +9,18 @@ public class GameManager : MonoBehaviour
     public static GameManager singleton { get; private set; }
 
     public float currentTime { get; private set; }
+    public int score { get; private set; }
+    public int combo { get; private set; }
+
+    // Inspector variables
+
+    [SerializeField]
+    private float _comboTimeWindow = 3.0f;
 
     // Private members
 
     private float _startTime;
+    private float _comboTimerStart;
 
     private Character _player;
     private Grapnel _grapnel;
@@ -31,7 +39,11 @@ public class GameManager : MonoBehaviour
 
         _player = GameObject.FindGameObjectWithTag("Player").GetComponent<Character>();
         _grapnel = _player.GetComponentInChildren<Grapnel>();
-        _player.HasDied += this.EndGame;
+        _player.HasDied             += this.EndGame;
+        _grapnel.Pulled4Distance    += AddScore;
+        Obstacle.OnDestroyed        += AddScore;
+        Obstacle.OnDestroyed        += IncrementCombo;
+        Collectible.OnDestroyed     += AddScore;
     }
 
     void Start()
@@ -42,7 +54,19 @@ public class GameManager : MonoBehaviour
 	void Update()
     {
         currentTime = Time.time - _startTime;
+
+        if (Time.time - _comboTimerStart > _comboTimeWindow)
+        {
+            combo = 1;
+        }
 	}
+
+    void OnDestroy()
+    {
+        Obstacle.OnDestroyed -= IncrementCombo;
+        Obstacle.OnDestroyed -= AddScore;
+        Collectible.OnDestroyed -= AddScore;
+    }
 
     // Private methods
 
@@ -53,11 +77,24 @@ public class GameManager : MonoBehaviour
         AtelierManager.singleton.Initialize();
         _startTime = Time.time;
         ApplicationManager.singleton.Resume();
+        combo = 1;
+        score = 0;
     }
 
     private void EndGame()
     {
         ApplicationManager.singleton.Pause();
+    }
+
+    private void IncrementCombo(int score)
+    {
+        ++combo;
+        _comboTimerStart = Time.time;
+    }
+
+    private void AddScore(int newScore)
+    {
+        score += newScore * combo;
     }
 
     // Public methods

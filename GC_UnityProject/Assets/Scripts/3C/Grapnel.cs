@@ -6,15 +6,24 @@ public class Grapnel : MonoBehaviour, IPersistent
 
     // States
 
-    private enum States { IDLE, FIRED, HOOKED, REWINDING, HIT_NOTHING }
+    public enum States { IDLE, FIRED, HOOKED, REWINDING, HIT_NOTHING }
 
     // Events
 
-    public event System.Action OnHooked;
-    public event System.Action OnDetached;
-    public event System.Action OnLaunched;
-    public event System.Action OnRewinding;
-    public event System.Action OnFinishedRewinding;
+    public event System.Action<States> OnStateChanged;
+    public event System.Action<int> Pulled4Distance;
+
+    // Properties
+
+    public States state
+    {
+        get { return _state; }
+        private set
+        {
+            _state = value;
+            if (OnStateChanged != null) OnStateChanged(value);
+        }
+    }
 
     // Inspector variables
 
@@ -30,6 +39,8 @@ public class Grapnel : MonoBehaviour, IPersistent
     private float _weight;
     [SerializeField]
     private LayerMask _layerMask;
+    [SerializeField]
+    private float _pointCollectingDistance = 1.0f;
 
     // Private members
 
@@ -41,6 +52,9 @@ public class Grapnel : MonoBehaviour, IPersistent
     private float _duration;
     private Vector2 _boxCastSize;
     private Vector2 _previousPosition;
+    private Vector2 _previousPlayerPosition;
+    private float _pointCollectingSqDistance;
+    private float _pulledSqDistance;
 
     private Transform _myTransform;
     private Transform _playerTransform;
@@ -61,7 +75,8 @@ public class Grapnel : MonoBehaviour, IPersistent
 
         Collider2D myCollider = GetComponent<Collider2D>();
         _boxCastSize = new Vector2(myCollider.bounds.max.x - myCollider.bounds.min.x, myCollider.bounds.max.y - myCollider.bounds.min.y);
-        _previousPosition = _myTransform.position;
+
+        _pointCollectingSqDistance = _pointCollectingDistance * _pointCollectingDistance;
     }
 
     void Start()
@@ -74,7 +89,7 @@ public class Grapnel : MonoBehaviour, IPersistent
         if (_application.isPaused)
             return;
 
-        switch (_state)
+        switch (state)
         {
             case States.IDLE:
                 break;
@@ -96,25 +111,51 @@ public class Grapnel : MonoBehaviour, IPersistent
 
     void FixedUpdate()
     {
-        if (_state == States.FIRED)
+        switch (state)
         {
-            Vector2 direction = (Vector2)_myTransform.position - _previousPosition;
-            RaycastHit2D[] hit = Physics2D.BoxCastAll(_previousPosition, _boxCastSize, _currentAngle * Mathf.Rad2Deg + 180.0f, direction, direction.magnitude, _layerMask);
-            if (hit.Length == 0)
-                return;
-
-            int closestObject = 0;
-            float closestDistance = Mathf.Infinity;
-            for (int i = 0; i < hit.Length; ++i)
-            {
-                float distance = Vector2.Distance(_previousPosition, hit[i].transform.position);
-                if (distance <= closestDistance)
+            //case States.IDLE:
+            //    break;
+            case States.FIRED:
                 {
-                    closestDistance = distance;
-                    closestObject = i;
+                    Vector2 direction = (Vector2)_myTransform.position - _previousPosition;
+                    RaycastHit2D[] hit = Physics2D.BoxCastAll(_previousPosition, _boxCastSize, _currentAngle * Mathf.Rad2Deg + 180.0f, direction, direction.magnitude, _layerMask);
+                    if (hit.Length == 0)
+                        return;
+
+                    int closestObject = 0;
+                    float closestDistance = Mathf.Infinity;
+                    for (int i = 0; i < hit.Length; ++i)
+                    {
+                        float distance = Vector2.Distance(_previousPosition, hit[i].transform.position);
+                        if (distance <= closestDistance)
+                        {
+                            closestDistance = distance;
+                            closestObject = i;
+                        }
+                    }
+                    Hook(hit[closestObject].collider.gameObject);
                 }
-            }
-            Hook(hit[closestObject].collider.gameObject);
+                break;
+            case States.HOOKED:
+                {
+                    float dx = _previousPlayerPosition.x - _playerTransform.position.x;
+                    float dy = _previousPlayerPosition.y - _playerTransform.position.y;
+                    _pulledSqDistance += dx * dx + dy * dy;
+                    if (_pulledSqDistance >= _pointCollectingSqDistance)
+                    {
+                        if (Pulled4Distance != null) Pulled4Distance(_currentlyHookedObject.hookedPoints);
+                        _pulledSqDistance = 0.0f;
+                    }
+
+                    _previousPlayerPosition = _playerTransform.position;
+                }
+                break;
+            //case States.REWINDING:
+            //    break;
+            //case States.HIT_NOTHING:
+            //    break;
+            default:
+                break;
         }
 
         _previousPosition = _myTransform.position;
@@ -122,7 +163,7 @@ public class Grapnel : MonoBehaviour, IPersistent
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (_state == States.FIRED)
+        if (state == States.FIRED)
         {
             //Hook(other.gameObject);
         }
@@ -132,8 +173,10 @@ public class Grapnel : MonoBehaviour, IPersistent
 
     public void Initialize()
     {
-        _state = States.IDLE;
+        state = States.IDLE;
         _currentAngle = 0.0f;
+        _previousPosition = _myTransform.position;
+        _pulledSqDistance = 0.0f;
     }
 
     public void Clear()
@@ -156,7 +199,7 @@ public class Grapnel : MonoBehaviour, IPersistent
 		}
         else
         {
-            _state = States.REWINDING;
+            state = States.REWINDING;
         }
     }
 
@@ -169,11 +212,9 @@ public class Grapnel : MonoBehaviour, IPersistent
         }
         else
         {
-            _state = States.IDLE;
+            state = States.IDLE;
             _myTransform.localPosition = _initialPosition;
             _myTransform.rotation = Quaternion.identity;
-
-            if (OnFinishedRewinding != null) OnFinishedRewinding();
         }
     }
 
@@ -187,22 +228,22 @@ public class Grapnel : MonoBehaviour, IPersistent
 
     private void Hook(GameObject obstacle)
     {
-        _state = States.HOOKED;
         _currentlyHookedObject = obstacle.GetComponent<Obstacle>();
         _targetPosition = _currentlyHookedObject.transform.position;
         _myTransform.position = _targetPosition;
         _myTransform.SetParent(obstacle.transform);
+        _previousPlayerPosition = _playerTransform.position;
+        _pulledSqDistance = 0.0f;
 
-        if (OnHooked != null) OnHooked();
+        state = States.HOOKED;
     }
 
     // Public methods
 
     public void Launch(Vector3 targetPosition)
     {
-        if (_state == States.IDLE || _state == States.REWINDING)
+        if (state == States.IDLE || state == States.REWINDING)
         {
-            _state = States.FIRED;
             _targetPosition = targetPosition;
 
             float angle = Mathf.Atan2(targetPosition.y - _myTransform.position.y, targetPosition.x - _myTransform.position.x);
@@ -211,25 +252,21 @@ public class Grapnel : MonoBehaviour, IPersistent
 
             _duration = 0.0f;
             float distance = Vector3.Distance(_myTransform.position, targetPosition);
-            _realSpeed = (_launchSpeed + Mathf.Abs(_player.fallMovement)) / distance;
+            _realSpeed = /*(*/_launchSpeed/* + Mathf.Abs(_player.fallMovement))*/ / distance;
 
-            if (OnLaunched != null) OnLaunched();
+            state = States.FIRED;
         }
     }
 
     public void Release()
     {
-        if (_state == States.FIRED || _state == States.HOOKED)
+        if (state == States.FIRED || state == States.HOOKED)
         {
-            if (_state == States.HOOKED && OnDetached != null)
-                OnDetached();
-
-            _state = States.REWINDING;
             _targetPosition = _playerTransform.InverseTransformPoint(_myTransform.position);
 
             _duration = 0.0f;
             float distance = Vector3.Distance(_myTransform.position, _playerTransform.TransformPoint(_initialPosition));
-            _realSpeed = (_rewindSpeed + Mathf.Abs(_player.fallMovement)) / distance;
+            _realSpeed = /*(*/_rewindSpeed/* + Mathf.Abs(_player.fallMovement))*/ / distance;
 
             _player.externalForce = Vector2.zero;
             _myTransform.SetParent(_playerTransform);
@@ -240,7 +277,7 @@ public class Grapnel : MonoBehaviour, IPersistent
                 _currentlyHookedObject = null;
             }
 
-            if (OnRewinding != null) OnRewinding();
+            state = States.REWINDING;
         }
     }
 

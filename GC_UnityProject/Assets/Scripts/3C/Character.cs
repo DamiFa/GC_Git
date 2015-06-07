@@ -23,9 +23,9 @@ public class Character : MonoBehaviour, IPersistent
                 HasDied();
         }
     }
-    public float fallMovement { get { return _fallMovement; } }
     public Vector2 externalForce { get; set; }
-    public float tilt { get { return _tiltMovement; } }
+    public float fallMovement { get; private set; }
+    public float tiltMovement { get; private set; }
 
     // Events
 
@@ -53,8 +53,6 @@ public class Character : MonoBehaviour, IPersistent
     private bool _isDead;
     private float _velocityX;
     private float _velocityY;
-    private float _fallMovement;
-    private float _tiltMovement;
     private Vector3 _initialPosition;
 
     private Transform _myTransform;
@@ -85,8 +83,8 @@ public class Character : MonoBehaviour, IPersistent
         Fall();
 
         Vector2 additionalForce = externalForce;
-        _velocityX = _tiltMovement + additionalForce.x;
-        _velocityY = _fallMovement + additionalForce.y;
+        _velocityX = tiltMovement + additionalForce.x;
+        _velocityY = fallMovement + additionalForce.y;
 
         // Clamp
         float xPosition = Mathf.Clamp(_myTransform.position.x, -_horizontalClamp, _horizontalClamp);
@@ -107,6 +105,10 @@ public class Character : MonoBehaviour, IPersistent
 #endif
             isDead = true;
         }
+        else if (other.gameObject.layer == Collectible.LAYER)
+        {
+            other.GetComponent<Collectible>().Clear();
+        }
     }
 
     // Virtual/contract methods
@@ -114,7 +116,7 @@ public class Character : MonoBehaviour, IPersistent
     public void Initialize()
     {
         isDead = false;
-        _fallMovement = 1.0f;
+        fallMovement = 1.0f;
     }
 
     public void Clear()
@@ -127,14 +129,14 @@ public class Character : MonoBehaviour, IPersistent
 
     private void Fall()
     {
-        _fallMovement = -_fallingStrength.Evaluate(GameManager.singleton.currentTime * INVERSE_180) * _fallingSpeed;
+        fallMovement = -_fallingStrength.Evaluate(_gameManager.currentTime * INVERSE_180) * _fallingSpeed;
     }
 
     // Public methods
 
     public void Tilt(float input)
     {
-        _tiltMovement = _tiltStrength.Evaluate(Mathf.Abs(input)) * Mathf.Sign(input) * _tiltSpeed;
+        tiltMovement = _tiltStrength.Evaluate(Mathf.Abs(input)) * Mathf.Sign(input) * _tiltSpeed;
     }
 
 }
