@@ -22,10 +22,12 @@ public class AnimationController : MonoBehaviour, IPersistent
     // Private members
 
     private Character _character;
+    private SpriteRenderer _grapnelRenderer;
 
     void Awake()
     {
         _character = GetComponentInParent<Character>();
+        _grapnelRenderer = _grapnel.GetComponent<SpriteRenderer>();
     }
 
 	void Start()
@@ -58,7 +60,7 @@ public class AnimationController : MonoBehaviour, IPersistent
 
     public void Clear()
     {
-        
+        _grapnelRenderer.enabled = true;
     }
 
     // Private methods
@@ -78,11 +80,13 @@ public class AnimationController : MonoBehaviour, IPersistent
                 _body.SetBool("IsHooked", true);
                 _grapnel.SetBool("IsHooked", true);
                 _grapnel.SetBool("IsLaunched", false);
+                _grapnelRenderer.enabled = false;
                 break;
             case Grapnel.States.REWINDING:
                 _grapnel.SetBool("IsRewinding", true);
                 _grapnel.SetBool("IsLaunched", false);
                 _grapnel.SetBool("IsHooked", false);
+                _grapnelRenderer.enabled = true;
                 break;
             case Grapnel.States.HIT_NOTHING:
                 break;
