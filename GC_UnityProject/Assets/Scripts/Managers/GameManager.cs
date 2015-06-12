@@ -75,6 +75,7 @@ public class GameManager : MonoBehaviour
         _player.Initialize();
         _grapnel.Initialize();
         AtelierManager.singleton.Initialize();
+        BackgroundManager.singleton.Initialize();
         _startTime = Time.time;
         ApplicationManager.singleton.Resume();
         combo = 1;
@@ -102,6 +103,7 @@ public class GameManager : MonoBehaviour
     public void Reload()
     {
         AtelierManager.singleton.Clear();
+        BackgroundManager.singleton.Clear();
         _player.Clear();
         _grapnel.Clear();
         Camera.main.GetComponent<CameraMotion>().Clear();
