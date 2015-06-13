@@ -10,8 +10,16 @@ public class BackgroundManager : MonoBehaviour, IPersistent
 
     [SerializeField]
     private Transform[] _gradientTextures;
+    [SerializeField]
     private float _minGradientInterval = 1.0f;
+    [SerializeField]
     private float _maxGradientInterval = 3.0f;
+    [SerializeField]
+    private Transform[] _starTextures;
+    [SerializeField]
+    private Transform[] _planetTextures;
+    [SerializeField]
+    private Transform[] _nebulaeTextures;
 
     // Private members
 
