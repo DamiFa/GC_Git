@@ -44,11 +44,14 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: Gradients
-    uniqueID: 3760353233
-    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Stars
+    uniqueID: 3760353233
+    locked: 0
+  - name: Nebulae
+    uniqueID: 2610427755
     locked: 0
   - name: Arms
     uniqueID: 3793427337
@@ -58,6 +61,9 @@ TagManager:
     locked: 0
   - name: Bag
     uniqueID: 3195298113
+    locked: 0
+  - name: Grapnel
+    uniqueID: 3743653067
     locked: 0
   - name: Rockets
     uniqueID: 780767951
