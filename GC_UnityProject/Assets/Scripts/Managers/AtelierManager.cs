@@ -65,6 +65,12 @@ public class AtelierManager : MonoBehaviour, IPersistent
         }
     }
 
+    void OnDestroy()
+    {
+        Atelier.ReadyToBePooled -= this.Pool;
+        Atelier.OnPlayerEntered -= this.Append;
+    }
+
     // Virtual/contract methods
 
     public void Initialize()

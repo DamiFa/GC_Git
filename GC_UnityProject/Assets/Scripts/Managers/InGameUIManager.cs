@@ -2,10 +2,10 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class UIManager : MonoBehaviour, IPersistent
+public class InGameUIManager : MonoBehaviour, IPersistent
 {
 
-    public static UIManager singleton { get; private set; }
+    public static InGameUIManager singleton { get; private set; }
 
     // Inspector variables
 

@@ -4599,6 +4599,7 @@ GameObject:
   - 114: {fileID: 73337350}
   - 114: {fileID: 73337352}
   - 114: {fileID: 73337353}
+  - 114: {fileID: 73337354}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -4665,6 +4666,18 @@ MonoBehaviour:
   _combo: {fileID: 1232973303}
   _endScreen: {fileID: 1914585883}
   _endScreenScore: {fileID: 1089680352}
+--- !u!114 &73337354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 73337349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: facf6f6ca9890ad4aa4b0afd69029e65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _levelName: Main Menu
 --- !u!1 &75478009
 GameObject:
   m_ObjectHideFlags: 0
@@ -87406,7 +87419,7 @@ MonoBehaviour:
     m_PostInfinity: 2
   _tiltSpeed: 8
   _horizontalClamp: 4.30000019
-  _isInvinsible: 1
+  _isInvinsible: 0
 --- !u!61 &1797182078
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -103754,7 +103767,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2040423384}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 73337354}
+        m_MethodName: LoadLevel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &2040423384
