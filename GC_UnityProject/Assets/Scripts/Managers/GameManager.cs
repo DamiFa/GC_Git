@@ -53,6 +53,8 @@ public class GameManager : MonoBehaviour
 
 	void Update()
     {
+        if (ApplicationManager.isPaused) return;
+
         currentTime = Time.time - _startTime;
 
         if (Time.time - _comboTimerStart > _comboTimeWindow)
@@ -108,6 +110,14 @@ public class GameManager : MonoBehaviour
         _grapnel.Clear();
         Camera.main.GetComponent<CameraMotion>().Clear();
         StartGame();
+    }
+
+    public void TogglePause()
+    {
+        if (ApplicationManager.isPaused)
+            ApplicationManager.singleton.Resume();
+        else
+            ApplicationManager.singleton.Pause();
     }
 
 }

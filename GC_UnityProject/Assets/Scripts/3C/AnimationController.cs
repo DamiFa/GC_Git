@@ -40,6 +40,8 @@ public class AnimationController : MonoBehaviour, IPersistent
 	
 	void LateUpdate()
     {
+        if (ApplicationManager.isPaused) return;
+
         float tilt = _character.tiltMovement * Time.deltaTime * _rocketRotationSpeed;
         float leftRocketAngle = Mathf.Lerp(0.0f, _rocketMaxAngle, tilt);
         float rightRocketAngle = Mathf.Lerp(0.0f, -1.0f * _rocketMaxAngle, -1.0f * tilt);

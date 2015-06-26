@@ -8,7 +8,7 @@ public class ApplicationManager : MonoBehaviour
 
     public static ApplicationManager singleton { get; private set; }
 
-    public bool isPaused { get; private set; }
+    public static bool isPaused { get; private set; }
 
     void Awake()
     {

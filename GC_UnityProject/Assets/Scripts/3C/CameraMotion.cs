@@ -23,6 +23,8 @@ public class CameraMotion : MonoBehaviour, IPersistent
 	
 	void Update()
     {
+        if (ApplicationManager.isPaused) return;
+
         _myTransform.position = new Vector3(_myTransform.position.x, _player.position.y + _offsetY, _myTransform.position.z);
 	}
 

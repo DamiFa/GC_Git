@@ -58,7 +58,6 @@ public class Character : MonoBehaviour, IPersistent
     private Transform _myTransform;
     private Rigidbody2D _myRigidbody;
     private GameManager _gameManager;
-    private ApplicationManager _application;
 
     // Messages
 
@@ -72,12 +71,11 @@ public class Character : MonoBehaviour, IPersistent
 	void Start()
     {
         _gameManager = GameManager.singleton;
-        _application = ApplicationManager.singleton;
 	}
 	
 	void Update()
     {
-        if (_isDead || _application.isPaused)
+        if (_isDead || ApplicationManager.isPaused)
             return;
 
         Fall();

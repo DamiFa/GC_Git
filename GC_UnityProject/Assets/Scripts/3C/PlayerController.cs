@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
 
 	void Update()
     {
-        if (_character.isDead)
+        if (_character.isDead || ApplicationManager.isPaused)
             return;
 
         _prevFingerCount = _fingerCount;

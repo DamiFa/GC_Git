@@ -60,7 +60,6 @@ public class Grapnel : MonoBehaviour, IPersistent
     private Transform _playerTransform;
     private Character _player;
     private Obstacle _currentlyHookedObject;
-    private ApplicationManager _application;
     
 
     // Messages
@@ -78,15 +77,10 @@ public class Grapnel : MonoBehaviour, IPersistent
 
         _pointCollectingSqDistance = _pointCollectingDistance * _pointCollectingDistance;
     }
-
-    void Start()
-    {
-        _application = ApplicationManager.singleton;
-    }
 	
 	void Update()
     {
-        if (_application.isPaused)
+        if (ApplicationManager.isPaused)
             return;
 
         switch (state)
