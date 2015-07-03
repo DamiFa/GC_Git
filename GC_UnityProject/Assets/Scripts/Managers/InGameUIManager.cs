@@ -17,6 +17,8 @@ public class InGameUIManager : MonoBehaviour, IPersistent
     private GameObject _endScreen;
     [SerializeField]
     private Text _endScreenScore;
+    [SerializeField]
+    private GameObject _pauseMenu;
 
     // Private members
 
@@ -40,13 +42,18 @@ public class InGameUIManager : MonoBehaviour, IPersistent
 
     void Start()
     {
-        
+        ApplicationManager.singleton.OnPaused += ShowPauseScreen;
     }
 
     void Update()
     {
         _score.text = GameManager.singleton.score.ToString();
         _combo.text = string.Format("x{0}", GameManager.singleton.combo.ToString());
+    }
+
+    void OnDestroy()
+    {
+        ApplicationManager.singleton.OnPaused -= ShowPauseScreen;
     }
 
     // Virtual/contract methods
@@ -67,6 +74,11 @@ public class InGameUIManager : MonoBehaviour, IPersistent
     {
         _endScreenScore.text = string.Format("Score\n{0}", GameManager.singleton.score.ToString());
         _endScreen.SetActive(true);
+    }
+
+    private void ShowPauseScreen()
+    {
+        _pauseMenu.SetActive(true);
     }
 
 }

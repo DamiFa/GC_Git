@@ -21,4 +21,10 @@ public class LevelLoader : MonoBehaviour
         if (OnStartedLoadingLevel != null) OnStartedLoadingLevel(asOp);
     }
 
+    public void Return2Menu()
+    {
+        Application.LoadLevel("Main Menu");
+    }
+        
+
 }
