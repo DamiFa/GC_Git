@@ -42,7 +42,7 @@ public class InGameUIManager : MonoBehaviour, IPersistent
 
     void Start()
     {
-        ApplicationManager.singleton.OnPaused += ShowPauseScreen;
+        GameManager.singleton.OnPaused += ShowPauseScreen;
     }
 
     void Update()
@@ -53,7 +53,7 @@ public class InGameUIManager : MonoBehaviour, IPersistent
 
     void OnDestroy()
     {
-        ApplicationManager.singleton.OnPaused -= ShowPauseScreen;
+        GameManager.singleton.OnPaused -= ShowPauseScreen;
     }
 
     // Virtual/contract methods

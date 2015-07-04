@@ -12,6 +12,10 @@ public class GameManager : MonoBehaviour
     public int score { get; private set; }
     public int combo { get; private set; }
 
+    // Events
+
+    public event System.Action OnPaused;
+
     // Inspector variables
 
     [SerializeField]
@@ -115,9 +119,14 @@ public class GameManager : MonoBehaviour
     public void TogglePause()
     {
         if (ApplicationManager.isPaused)
+        {
             ApplicationManager.singleton.Resume();
+        }
         else
+        {
             ApplicationManager.singleton.Pause();
+            if (OnPaused != null) OnPaused();
+        }
     }
 
 }

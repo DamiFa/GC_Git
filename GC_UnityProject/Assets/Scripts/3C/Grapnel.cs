@@ -72,7 +72,7 @@ public class Grapnel : MonoBehaviour, IPersistent
         _initialPosition = _myTransform.localPosition;
         _currentlyHookedObject = null;
 
-        Collider2D myCollider = GetComponent<Collider2D>();
+        Collider2D myCollider = GetComponentInChildren<Collider2D>();
         _boxCastSize = new Vector2(myCollider.bounds.max.x - myCollider.bounds.min.x, myCollider.bounds.max.y - myCollider.bounds.min.y);
 
         _pointCollectingSqDistance = _pointCollectingDistance * _pointCollectingDistance;
@@ -240,9 +240,11 @@ public class Grapnel : MonoBehaviour, IPersistent
         {
             _targetPosition = targetPosition;
 
-            float angle = Mathf.Atan2(targetPosition.y - _myTransform.position.y, targetPosition.x - _myTransform.position.x);
-            _myTransform.Rotate(Vector3.forward, angle * Mathf.Rad2Deg + 90.0f - _currentAngle, Space.World);
-            _currentAngle = angle;
+            //float angle = Mathf.Atan2(targetPosition.y - _myTransform.position.y, targetPosition.x - _myTransform.position.x);
+            //_myTransform.Rotate(Vector3.forward, angle * Mathf.Rad2Deg + 90.0f - _currentAngle, Space.World);
+            //_currentAngle = angle;
+
+            _myTransform.LookAt(new Vector3(targetPosition.x, targetPosition.y, _myTransform.position.z), Vector3.back);
 
             _duration = 0.0f;
             float distance = Vector3.Distance(_myTransform.position, targetPosition);

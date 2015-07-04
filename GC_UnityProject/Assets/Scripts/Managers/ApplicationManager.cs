@@ -9,10 +9,6 @@ public class ApplicationManager : MonoBehaviour
     public static ApplicationManager singleton { get; private set; }
 
     public static bool isPaused { get; private set; }
-    
-    // Events
-
-    public event System.Action OnPaused;
 
     void Awake()
     {
@@ -47,7 +43,6 @@ public class ApplicationManager : MonoBehaviour
     {
         isPaused = true;
         Time.timeScale = 0.0f;
-        if (OnPaused != null) OnPaused();
     }
 
     public void Resume()
