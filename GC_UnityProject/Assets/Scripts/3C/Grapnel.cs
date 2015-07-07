@@ -24,6 +24,10 @@ public class Grapnel : MonoBehaviour, IPersistent
             if (OnStateChanged != null) OnStateChanged(value);
         }
     }
+    public Vector3 targetPosition
+    {
+        get { return _targetPosition; }
+    }
 
     // Inspector variables
 
