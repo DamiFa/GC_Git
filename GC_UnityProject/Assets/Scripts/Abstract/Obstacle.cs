@@ -22,11 +22,26 @@ public abstract class Obstacle : MonoBehaviour, IPersistent
     protected int _hookedPoints;
     [SerializeField]
     protected int _destructionPoints;
+    [SerializeField]
+    protected float[] _depthLevels;
+
+    // Protected members
+
+    protected uint _depth = 1;
 
     // Virtual methods
 
     public virtual void Initialize()
     {
+        float playerHeight = Character.player.transform.position.y * -1.0f;
+        int i;
+        for (i = 0; i < _depthLevels.Length; ++i)
+        {
+            if (playerHeight < _depthLevels[i]) break;
+        }
+
+        _depth = i != 0 ? (uint)i : 1;
+
         gameObject.SetActive(true);
     }
 

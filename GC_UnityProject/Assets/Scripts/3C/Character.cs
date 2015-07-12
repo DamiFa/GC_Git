@@ -10,6 +10,8 @@ public class Character : MonoBehaviour, IPersistent
 
     // Properties
 
+    public static Character player { get; private set; }
+
     public bool isDead
     {
         get
@@ -43,6 +45,8 @@ public class Character : MonoBehaviour, IPersistent
     private float _tiltSpeed;
     [SerializeField]
     private float _horizontalClamp;
+    [SerializeField]
+    private bool _isPlayer = false;
 #if UNITY_EDITOR
     [SerializeField]
     private bool _isInvinsible;
@@ -66,6 +70,8 @@ public class Character : MonoBehaviour, IPersistent
         _myTransform = transform;
         _myRigidbody = GetComponent<Rigidbody2D>();
         _initialPosition = _myTransform.position;
+
+        if (_isPlayer) player = this;
     }
 
 	void Start()
