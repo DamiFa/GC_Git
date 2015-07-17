@@ -25,10 +25,10 @@ public class AtelierManager : MonoBehaviour, IPersistent
     private float _endHeight;
 
     private List<Atelier> _pooledAteliers;
-#if UNITY_WINRT == false
-    private RNGCryptoServiceProvider _rng;
-    private byte[] _randomNumbers;
-#endif
+//#if UNITY_WINRT == false
+//    private RNGCryptoServiceProvider _rng;
+//    private byte[] _randomNumbers;
+//#endif
 
     // Messages
 
@@ -48,10 +48,10 @@ public class AtelierManager : MonoBehaviour, IPersistent
         _pooledAteliers = new List<Atelier>();
         _pooledAteliers.Capacity = _atelierCount;
 
-#if UNITY_WINRT == false
-        _rng = new RNGCryptoServiceProvider();
-        _randomNumbers = new byte[1];
-#endif
+//#if UNITY_WINRT == false
+//        _rng = new RNGCryptoServiceProvider();
+//        _randomNumbers = new byte[1];
+//#endif
 
         Atelier.ReadyToBePooled += this.Pool;
         Atelier.OnPlayerEntered += this.Append;
@@ -114,12 +114,12 @@ public class AtelierManager : MonoBehaviour, IPersistent
 
     private void Append(Atelier atelier = null)
     {
-#if UNITY_WINRT == false
-        _rng.GetBytes(_randomNumbers);
-        int trueNumber = _randomNumbers[0] % _pooledAteliers.Count;
-#else
+//#if UNITY_WINRT == false
+//        _rng.GetBytes(_randomNumbers);
+//        int trueNumber = _randomNumbers[0] % _pooledAteliers.Count;
+//#else
         int trueNumber = Random.Range(0, _pooledAteliers.Count);
-#endif
+//#endif
 
         Atelier newAtelier = _pooledAteliers[trueNumber];
         newAtelier.transform.position = new Vector3(0.0f, _endHeight - (newAtelier.length * 0.5f), 0.0f);

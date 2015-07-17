@@ -71,7 +71,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleIdentifier: DamiFa.com
+  bundleIdentifier: com.team_onara.space_hooker
   bundleVersion: 0.1
   preloadedAssets: []
   metroEnableIndependentInputSource: 0
@@ -79,9 +79,9 @@ PlayerSettings:
   xboxOneDisableKinectGpuReservation: 0
   virtualRealitySupported: 0
   productGUID: fbb1211f0a7f86b489b7f073878df943
-  AndroidBundleVersionCode: 456
-  AndroidMinSdkVersion: 16
-  AndroidPreferredInstallLocation: 1
+  AndroidBundleVersionCode: 500
+  AndroidMinSdkVersion: 9
+  AndroidPreferredInstallLocation: 0
   aotOptions: 
   apiCompatibilityLevel: 2
   iPhoneStrippingLevel: 0
@@ -91,7 +91,7 @@ PlayerSettings:
   CreateWallpaper: 0
   APKExpansionFiles: 0
   preloadShaders: 0
-  StripUnusedMeshComponents: 0
+  StripUnusedMeshComponents: 1
   iPhoneSdkVersion: 988
   iPhoneTargetOSVersion: 22
   uIPrerenderedIcon: 0
@@ -121,8 +121,8 @@ PlayerSettings:
   AndroidTargetDevice: 0
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: 
-  AndroidKeyaliasName: 
+  AndroidKeystoreName: E:/Mes documents/Git/GC_Git/GC_UnityProject/space_hooker.keystore
+  AndroidKeyaliasName: space_hooker
   AndroidTVCompatibility: 1
   AndroidIsGame: 1
   androidEnableBanner: 1
