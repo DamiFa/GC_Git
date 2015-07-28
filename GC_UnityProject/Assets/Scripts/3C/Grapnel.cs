@@ -64,7 +64,6 @@ public class Grapnel : MonoBehaviour, IPersistent
     private Transform _playerTransform;
     private Character _player;
     private Obstacle _currentlyHookedObject;
-    
 
     // Messages
 
@@ -191,7 +190,7 @@ public class Grapnel : MonoBehaviour, IPersistent
     {
         if (Vector3.Distance(_myTransform.position, _targetPosition) > 0.1f)
 		{
-            Vector3 startPosition = _myTransform.TransformPoint(_initialPosition);
+            Vector3 startPosition = _playerTransform.position + _initialPosition;
             _myTransform.position = Vector3.Lerp(startPosition, _targetPosition, _launchStrength.Evaluate(_duration));
             _duration += _realSpeed * Time.deltaTime;
 		}
@@ -203,16 +202,18 @@ public class Grapnel : MonoBehaviour, IPersistent
 
     private void Rewind()
     {
-        if (Vector3.Distance(_myTransform.localPosition, _initialPosition) > 0.1f)
+        Vector3 worldInitialPos = _playerTransform.position + _initialPosition;
+        if (Vector3.Distance(_myTransform.position, worldInitialPos) > 0.1f)
         {
-            _myTransform.localPosition = Vector3.Lerp(_targetPosition, _initialPosition, _rewindStrength.Evaluate(_duration));
+            _myTransform.position = Vector3.Lerp(_targetPosition, worldInitialPos, _rewindStrength.Evaluate(_duration));
             _duration += _realSpeed * Time.deltaTime;
         }
         else
         {
             state = States.IDLE;
+            _myTransform.SetParent(_playerTransform);
             _myTransform.localPosition = _initialPosition;
-            _myTransform.rotation = Quaternion.identity;
+            _myTransform.rotation = Quaternion.identity;  
         }
     }
 
@@ -244,15 +245,13 @@ public class Grapnel : MonoBehaviour, IPersistent
         {
             _targetPosition = targetPosition;
 
-            //float angle = Mathf.Atan2(targetPosition.y - _myTransform.position.y, targetPosition.x - _myTransform.position.x);
-            //_myTransform.Rotate(Vector3.forward, angle * Mathf.Rad2Deg + 90.0f - _currentAngle, Space.World);
-            //_currentAngle = angle;
-
             _myTransform.LookAt(new Vector3(targetPosition.x, targetPosition.y, _myTransform.position.z), Vector3.back);
 
             _duration = 0.0f;
             float distance = Vector3.Distance(_myTransform.position, targetPosition);
-            _realSpeed = /*(*/_launchSpeed/* + Mathf.Abs(_player.fallMovement))*/ / distance;
+            _realSpeed = (_launchSpeed + Mathf.Abs(_player.fallMovement)) / distance;
+
+            _myTransform.SetParent(null);
 
             state = States.FIRED;
         }
@@ -262,14 +261,12 @@ public class Grapnel : MonoBehaviour, IPersistent
     {
         if (state == States.FIRED || state == States.HOOKED)
         {
-            _targetPosition = _playerTransform.InverseTransformPoint(_myTransform.position);
-
             _duration = 0.0f;
-            float distance = Vector3.Distance(_myTransform.position, _playerTransform.TransformPoint(_initialPosition));
-            _realSpeed = /*(*/_rewindSpeed/* + Mathf.Abs(_player.fallMovement))*/ / distance;
+            float distance = Vector3.Distance(_myTransform.position, _playerTransform.position + _initialPosition);
+            _realSpeed = (_rewindSpeed + Mathf.Abs(_player.fallMovement)) / distance;
 
             _player.externalForce = Vector2.zero;
-            _myTransform.SetParent(_playerTransform);
+            _myTransform.SetParent(null);
 
             if (_currentlyHookedObject != null)
             {
