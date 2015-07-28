@@ -100,7 +100,7 @@ public class BackgroundManager : MonoBehaviour, IPersistent
         int gradientIndex = Random.Range(0, _gradientTextures.Length);
 
         float gradientYPosition = _camera.position.y - _cameraSize - 1.0f;
-        _gradientTextures[gradientIndex].position = new Vector3(0.0f, gradientYPosition, 0.0f);
+        _gradientTextures[gradientIndex].position = new Vector3(0.0f, gradientYPosition, transform.position.z);
 
         StartCoroutine(CheckPlayerPosition(_replayCount, gradientYPosition - _gradientSize, Background.GRADIENT));
     }
